@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>KayaBiya</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="{% static 'assets/img/24px.png' %}" type="image/x-icon" />
+
+    <!-- Fonts and icons -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/extra.css' %}" />
+  </head>
+  <body class="custom-background">
+    <div class="uf-form-signin">
+      <div class="text-center">
+        <a href=""><img src="{% static 'assets/img/logo5cm.png' %}" alt="" width="100" height="100" /></a>
+        <h1 class="text-white h3">Account Login</h1>
+      </div>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <span style="margin-right: 15px;">{{ message }}</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+      <form class="mt-4" method="post">
+        {% csrf_token %}
+
+        
+
+        <div class="input-group uf-input-group input-group-lg mb-3">
+          <span class="input-group-text fa fa-user"></span>
+          <input type="text" name="username" class="form-control" placeholder="Enter Your Username" required />
+        </div>
+        <div class="input-group uf-input-group input-group-lg mb-3">
+          <span class="input-group-text fas fa-keyboard"></span>
+          <input type="password" name="password" class="form-control" placeholder="Enter Your Password" required />
+        </div>
+
+        <div class="d-grid mb-4">
+          <button type="submit" class="btn uf-btn-primary btn-lg">Login</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- JavaScript -->
+
+    <!-- Separate Popper and Bootstrap JS -->
+    <script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+  </body>
+</html>

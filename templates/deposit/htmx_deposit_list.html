@@ -1,0 +1,19 @@
+{% if deposits %}
+
+    {% for deposit in deposits %}
+      <tr>
+        <td>{{ deposit.date }}</td>
+        <td>{{ deposit.account|title }}</td>
+        <td class="text-center">Rs. {{ deposit.deposit_amount }}/-</td>
+        <td class="text-center">{{ deposit.deposit_by }}</td>
+        <td>{{ deposit.remarks }}</td>
+
+        <td class="text-center">
+          <a href="" class="btn btn-icon btn-round btn-info btn-xs" data-bs-toggle="tooltip" title="Edit Data"><i class="fa fa-edit"></i></a>
+          &nbsp;|&nbsp;
+          <span class="btn btn-icon btn-round btn-xs btn-danger" data-bs-toggle="tooltip" title="Delete Data" hx-delete="{% url 'delete_deposit' deposit.pk %}" hx-target="#deposit_list" hx-confirm="Are You Sure"><i class="fas fa-trash-alt"></i></span>
+        </td>
+      </tr>
+    {% endfor %}
+
+{% endif %}

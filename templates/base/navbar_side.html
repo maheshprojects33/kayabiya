@@ -1,0 +1,80 @@
+{% load static %}
+<div class="sidebar" data-background-color="dark">
+  <div class="sidebar-logo">
+    <!-- Logo Header -->
+    <div class="logo-header" data-background-color="dark">
+      <a href="" class="logo"><img src="{% static 'assets/img/logo5cm.png' %}" alt="navbar brand" class="navbar-brand" height="60" /> <span style="color: antiquewhite; margin-left: 10px; font-weight: bolder;">KAYA BIYA</span></a>
+      <div class="nav-toggle">
+        <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
+        <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
+      </div>
+      <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
+    </div>
+    <!-- End Logo Header -->
+  </div>
+  <div class="sidebar-wrapper scrollbar scrollbar-inner">
+    <div class="sidebar-content">
+      <ul class="nav nav-secondary">
+        <li class="nav-item">
+          <a href="{% url 'dashboard' %}" class="collapsed">
+            <i class="fas fa-home"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+        {% if user.is_staff or user.managed_community.exists %}
+          <li class="nav-item">
+            <a href="{% url 'community_list' %}">
+              <i class="fas fa-layer-group"></i>
+              <p>Community</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'account' %}">
+              <i class="fas fa-layer-group"></i>
+              <p>Accounts</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{% url 'member_list' %}">
+              <i class="fas fa-layer-group"></i>
+              <p>Members</p>
+            </a>
+          </li>
+        {% endif %}
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#sidebarLayouts">
+            <i class="fas fa-th-list"></i>
+            <p>Deposit</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="sidebarLayouts">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'deposit_list' %}"><span class="sub-item">View All</span></a>
+              </li>
+              <li>
+                <a href="{% url 'deposit_create' %}"><span class="sub-item">Single Entry</span></a>
+              </li>
+              <li>
+                <a href="{% url 'multideposit_create' %}"><span class="sub-item">Multiple Entry</span></a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#forms">
+            <i class="fas fa-pen-square"></i>
+            <p>Loan</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#tables">
+            <i class="fas fa-table"></i>
+            <p>Reports</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

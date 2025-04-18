@@ -1,0 +1,102 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div>
+    {% include 'base/error_messages.html' %}
+    <!-- To Display Messages If Any -->
+  </div>
+  {% if user.is_staff or user.managed_community.exists %}
+    <div class="container">
+      <div class="page-inner">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Member List</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="multi-filter-select" class="display table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Member ID</th>
+                        <th>Full Name</th>
+                        <th>Gender</th>
+                        <th>DOB</th>
+                        <th>Age</th>
+                        <th>Marital Status</th>
+                        <th>Mobile</th>
+                        <th>Address</th>
+                        <th>Ward No.</th>
+                        <th>House No.</th>
+                        <th>Citizenship No.</th>
+                        <th>Member Type</th>
+                        <th>Status</th>
+                        <th>Citizen Copy</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for member in members %}
+                        <tr>
+                          <td class="text-center">{{ member.member_id }}</td>
+                          <td>
+                            <div class="avatar-sm d-flex align-items-center">
+                              {% if member.profile_picture %}
+                                <a href="{% url 'update_member' member.pk %}"><img src="{{ member.profile_picture.url }}" alt="PP" class="avatar-img rounded-circle" style="width: 40px; height: 40px;" /></a>
+                              {% elif member.gender == 'Male' %}
+                                <a href="{% url 'update_member' member.pk %}"><img src="{% static 'assets/image/profile_male.jpg' %}" alt="PP" class="avatar-img rounded-circle" style="width: 40px; height: 40px;" /></a>
+                              {% else %}
+                                <a href="{% url 'update_member' member.pk %}"><img src="{% static 'assets/image/profile_female.png' %}" alt="PP" class="avatar-img rounded-circle" style="width: 40px; height: 40px;" /></a>
+                              {% endif %}
+
+                              <!-- Display the member's name next to the profile picture -->
+                              <span class="ms-2">{{ member.username.get_full_name|title }}</span>
+                            </div>
+                          </td>
+
+                          <td class="text-center">{{ member.gender }}</td>
+                          <td>{{ member.dob }}</td>
+                          <td class="text-center">{{ member.age }}</td>
+                          <td class="text-center">{{ member.marital_status }}</td>
+                          <td>{{ member.mobile }}</td>
+                          <td>{{ member.address }}</td>
+                          <td class="text-center">{{ member.ward }}</td>
+                          <td class="text-center">{{ member.house_no }}</td>
+                          <td class="text-center">{{ member.citizenship_no }}</td>
+                          <td class="text-center">{{ member.memeber_type }}</td>
+                          <td class="text-center">{{ member.status }}</td>
+                          <td class="text-center">
+                            {% if member.citizen_copy %}
+                              <a href=" {{ member.citizen_copy.url }} " target="_blank">Yes</a>
+                            {% else %}
+                              No
+                            {% endif %}
+                          </td>
+                          <td class="text-center">
+                            <a href="{% url 'update_member' member.pk %}" class="btn btn-icon btn-round btn-info btn-xs" data-bs-toggle="tooltip" title="Edit Member"><i class="fa fa-user-edit"></i></a>
+                            &nbsp;|&nbsp;
+                            <a href="{% url 'delete_member' member.pk %}" class="btn btn-icon btn-round btn-xs btn-danger" data-bs-toggle="tooltip" title="Delete Member"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--   Temperory Disabling
+    <! Floating Button 
+    <div class="fixed-action-btn btn-outline-link">
+      <a href="{% url 'create_member' %}" class="btn-floating btn-icon-prepend" title="Create New Member"><i class="fas fa-plus-circle"></i></a>
+    </div>
+      -->
+  {% else %}
+    <h1>You Are Smart Enough To View This Page</h1>
+  {% endif %}
+{% endblock %}

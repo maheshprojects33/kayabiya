@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div>
+    {% include 'base/error_messages.html' %}
+    <!-- To Display Messages If Any -->
+  </div>
+  {% if user.is_staff or user.managed_community.exists %}
+    <div class="container">
+      <div class="page-inner">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Community List</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="multi-filter-select" class="display table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Community Name</th>
+                        <th>Community Head</th>
+                        {% if user.is_staff %}
+                        <th class="text-center">Action</th>
+                        {% endif %}
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for community in communityList %}
+                        <tr>
+                          <td class="text-left">
+                            <a href="{% url 'community_member' community.id %}">{{ community.community_name }}</a>
+                          </td>
+                          {% comment %} <td>
+                            {% for member in community.community_members.all %}
+                              {% if member.role == 'Community-Head' %}
+                              {% if not forloop.first %}, {% endif %}
+                                {{ member.username.get_full_name|title }}
+                              {% endif %}
+                            {% endfor %}
+                          </td> {% endcomment %}
+                          <td class="text-left">
+                            {% for head in community.community_head.all %}
+                              {{ head.get_full_name|title }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                              No Community Head Assigned
+                            {% endfor %}
+                          </td>
+                          {% if user.is_staff %}
+                          <td class="text-center">
+                            <a href="{% url 'update_community' community.pk %}" class="btn btn-icon btn-round btn-info btn-xs" data-bs-toggle="tooltip" title="Edit Member"><i class="fa fa-user-edit"></i></a>
+                            &nbsp;|&nbsp;
+                            <a href="{% url 'delete_community' community.pk %}" class="btn btn-icon btn-round btn-xs btn-danger" data-bs-toggle="tooltip" title="Delete Member"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                          {% endif %}
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Button -->
+    <div class="fixed-action-btn btn-outline-link">
+      <a href="{% url 'create_community' %}" class="btn-floating btn-icon-prepend" title="Create New Community"><i class="fas fa-plus-circle"></i></a>
+    </div>
+  {% else %}
+    <h1>You Are Smart Enough To View This Page</h1>
+  {% endif %}
+{% endblock %}

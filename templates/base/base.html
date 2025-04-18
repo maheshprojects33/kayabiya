@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>KayaBiya</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="{% static 'assets/img/24px.png' %}" type="image/x-icon" />
+
+    <!-- Fonts and icons -->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/extra.css' %}" />
+  </head>
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="wrapper">
+      <!-- Nav Sidebar -->
+      {% include 'base/navbar_side.html' %}
+      <!-- End Nav Sidebar -->
+
+      <div class="main-panel">
+        <!-- Nav Topbar -->
+        {% include 'base/navbar_top.html' %}
+        <!-- End Nav Topbar -->
+
+        <div class="container">
+          <div class="page-inner">
+            {% block content %}
+
+            {% endblock %}
+          </div>
+        </div>
+
+        <!-- Footer -->
+        {% include 'base/footer.html' %}
+        <!-- End Footer -->
+      </div>
+    </div>
+
+    <!-- Core JS Files -->
+    <script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+    <!-- Chart JS -->
+    <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+    <!-- Chart Circle -->
+    <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+
+    <!-- Datatables -->
+    <script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="{% static 'assets/js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugin/jsvectormap/world.js' %}"></script>
+
+    <!-- Sweet Alert -->
+    <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+    <!-- Extra JS -->
+    <script src="{% static 'assets/js/extra.js' %}"></script>
+
+    <!-- htmx JS -->
+    <script src="{% static 'assets/js/htmx.min.js' %}"></script>
+
+
+    {% block extrajs %}
+
+    {% endblock %}
+  </body>
+</html>

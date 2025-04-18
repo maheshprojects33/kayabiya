@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div>
+    {% include 'base/error_messages.html' %}
+    <!-- To Display Messages If Any -->
+  </div>
+  {% if user.is_staff %}
+    <div class="container">
+      <div class="page-inner">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">All Deposit Lists</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="multi-filter-select" class="display table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Account</th>
+                        <th>Deposit Amount</th>
+                        <th>Deposit By</th>
+                        <th>Remarks</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+
+                    <tbody id="deposit_list">
+                      {% include "deposit/htmx_deposit_list.html" %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Floating Button -->
+    <div class="fixed-action-btn btn-outline-link">
+      <a href="{% url 'deposit_create' %}" class="btn-floating btn-icon-prepend" title="Add New Deposit"><i class="fas fa-plus-circle"></i></a>
+    </div>
+  {% else %}
+    <h1>You Are Smart Enough To View This Page</h1>
+  {% endif %}
+{% endblock %}

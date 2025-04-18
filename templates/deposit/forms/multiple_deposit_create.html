@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  {% if user.is_staff %}
+    <div class="d-flex justify-content-center align-items-center flex-column flex-md-row pt-2 pb-4">
+      <div class="text-center">
+        <h3 class="fw-bold mb-3">Multiple Deposit Form</h3>
+      </div>
+    </div>
+    {% include 'base/error_messages.html' %}
+    <div class="text-danger">
+      <p>('*' marked fields are required)</p>
+    </div>
+    {% comment %} <form method="post">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="mb-3 position-relative">
+          {{ field.label_tag }}
+          {% if field.field.required %}
+            <span class="text-danger">*</span>
+          {% endif %}
+
+          {{ field }}
+
+          {# Add datalist only for the 'account' field #}
+          {% if field.name == 'account' %}
+            <datalist id="usernames-datalist">{{ form.datalist|safe }}</datalist>
+          {% endif %}
+
+          {% if field.errors %}
+            <ul class="text-danger">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <a href="" class="btn btn-danger">Cancel</a>
+    </form> {% endcomment %}
+    <!-- templates/deposit/deposit_formset.html -->
+
+    <form method="post">
+      {% csrf_token %}
+      <table class="table table-bordered table-bordered-bd-info table-responsive">
+        <thead>
+          <tr>
+            <th>
+              Date <span class="text-danger">*</span>
+            </th>
+            <th>
+              Account <span class="text-danger">*</span>
+            </th>
+            <th>
+              Deposit Amount <span class="text-danger">*</span>
+            </th>
+            <th>
+              Deposit By <span class="text-danger">*</span>
+            </th>
+            <th>Remarks</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="multi-form">
+          {% include 'deposit/forms/htmx_multideposit_create.html' %}
+        </tbody>
+      </table>
+      <button type="button" class="btn btn-success" hx-get="{% url 'multideposit_create' %}" hx-target="#multi-form" hx-swap="beforeend">Add More</button>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  {% else %}
+    <h1>You Are Smart Enough To View This Page</h1>
+  {% endif %}
+{% endblock %}
