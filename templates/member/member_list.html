@@ -21,6 +21,7 @@
                       <tr>
                         <th>Member ID</th>
                         <th>Full Name</th>
+                        <th>Community</th>
                         <th>Gender</th>
                         <th>DOB</th>
                         <th>Age</th>
@@ -42,7 +43,7 @@
                         <tr>
                           <td class="text-center">{{ member.member_id }}</td>
                           <td>
-                            <div class="avatar-sm d-flex align-items-center">
+                            <div class="d-flex align-items-center" >
                               {% if member.profile_picture %}
                                 <a href="{% url 'update_member' member.pk %}"><img src="{{ member.profile_picture.url }}" alt="PP" class="avatar-img rounded-circle" style="width: 40px; height: 40px;" /></a>
                               {% elif member.gender == 'Male' %}
@@ -56,6 +57,7 @@
                             </div>
                           </td>
 
+                          <td>{{ member.community }}</td>
                           <td class="text-center">{{ member.gender }}</td>
                           <td>{{ member.dob }}</td>
                           <td class="text-center">{{ member.age }}</td>
@@ -90,12 +92,12 @@
         </div>
       </div>
     </div>
-    <!--   Temperory Disabling
+    <!--    Temperory Disabling
     <! Floating Button 
     <div class="fixed-action-btn btn-outline-link">
       <a href="{% url 'create_member' %}" class="btn-floating btn-icon-prepend" title="Create New Member"><i class="fas fa-plus-circle"></i></a>
     </div>
-      -->
+       -->
   {% else %}
     <h1>You Are Smart Enough To View This Page</h1>
   {% endif %}

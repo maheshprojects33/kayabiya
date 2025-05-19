@@ -1,3 +1,4 @@
+from multiprocessing import context
 from pyexpat.errors import messages
 from django.forms import BaseModelForm
 from django.http import HttpResponse
@@ -7,15 +8,44 @@ from django.views.generic import TemplateView, CreateView, ListView, View
 
 from django.contrib import messages
 
+from member.admin import CommunityAdmin
+
 from .models import *
 from .forms import *
+
+from member.models import Community
 
 
 # Create your views here.
 class DepositView(ListView):
     model = Deposit
     template_name = "deposit/deposit_list.html"
-    context_object_name = "deposits"
+    # context_object_name = "deposits"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        login_user = self.request.user
+
+        is_community_head = Community.objects.filter(community_head=login_user)
+        context["is_community_head"] = is_community_head.exists()
+
+        if login_user.is_staff:
+            context["deposits"] = Deposit.objects.all()
+        elif is_community_head.exists():
+            # Community head sees deposits of members in their managed communities
+            
+            members = Member.objects.filter(community__in=is_community_head)
+            print(members)
+            context["deposits"] = Deposit.objects.filter(account__in=members)
+        else:
+             # Normal member sees only their own deposits
+            
+            member = Member.objects.get(username=login_user)
+            context["deposits"] = Deposit.objects.filter(account=member)
+            
+        
+
+        return context
 
 
 class SingleDepositCreateView(CreateView):

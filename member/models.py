@@ -41,6 +41,11 @@ class Member(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name='community_members')
+    membership_id = models.CharField(max_length=20, blank=True, null=True)
+    grand_parent = models.CharField(max_length=20, blank=True, null=True)
+    parent = models.CharField(max_length=20, blank=True, null=True)
+    spouse = models.CharField(max_length=20, blank=True, null=True)
+    
     gender = models.CharField(max_length=6, choices=GENDER, null=True, blank=True)
     dob = models.DateField(null=True, blank=True)
     marital_status = models.CharField(
@@ -52,7 +57,6 @@ class Member(models.Model):
     house_number = models.CharField(max_length=10, blank=True)
     citizenship_number = models.CharField(max_length=10, blank=True)
     join_date = models.DateField(null=True, blank=True)
-    member_type = models.CharField(max_length=9, choices=MEMBER_TYPE, default="General")
     profile_picture = models.ImageField(upload_to="profile/", blank=True, null=True)
     citizen_copy = models.ImageField(upload_to="citizen/", blank=True, null=True)
     status = models.CharField(max_length=8, choices=STATUS, default="Active")

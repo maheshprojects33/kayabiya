@@ -24,15 +24,18 @@ class AccountView(StaffRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
+        is_community_head = Community.objects.filter(community_head=user).exists()
+        
 
         if user.is_staff:
             return User.objects.all()
-        
-        # Get communities this user manages
-        managed_communities = Community.objects.filter(community_head=user)
+        elif is_community_head:
+            # Get communities this user manages
+            managed_communities = Community.objects.filter(community_head=user)
 
-        # Return all members in those communities
-        member_users = Member.objects.filter(community__in=managed_communities).values_list('username', flat=True)
+            # Return all members in those communities
+            member_users = Member.objects.filter(community__in=managed_communities).values_list('username', flat=True)
+            
 
         return User.objects.filter(id__in=member_users)
 
@@ -43,11 +46,18 @@ class UserRegisterView(StaffRequiredMixin, CreateView):
     form_class = UserRegistrationForm
     success_url = _("account")  # Redirect to login page after successful registration
 
+        
     def form_valid(self, form):
         user = form.save()
+        
+        # Get the single community where the current user is a head
+        try:
+            community = Community.objects.get(community_head=self.request.user)
+        except Community.DoesNotExist:
+            community = None
 
         # To Create New Member Automatically
-        Member.objects.create(username=user)
+        Member.objects.create(username=user, community=community)
 
         messages.success(self.request, "User Account Has Been Created Successfully")
         return super().form_valid(form)

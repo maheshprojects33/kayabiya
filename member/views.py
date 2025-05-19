@@ -11,23 +11,41 @@ from .models import *
 from .forms import *
 
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 # Create your views here.
 class MemberView(StaffRequiredMixin, ListView):
     model = Member
     template_name = 'member/member_list.html'
-    context_object_name = 'members'
+    # context_object_name = 'members'
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         user = self.request.user
+        is_community_head = Community.objects.filter(community_head=user).exists()
 
         if user.is_staff:
-            return Member.objects.all()
+            context["members"] = Member.objects.all()
+        elif is_community_head:
+            managed_communities = Community.objects.filter(community_head=user)
+            context["members"] = Member.objects.filter(
+                Q(community__in=managed_communities) | Q(community__isnull=True)
+            )
+            
         
-        # Get communities this user manages
-        managed_communities = Community.objects.filter(community_head=user)
-        return Member.objects.filter(community__in=managed_communities)
+
+        return context
+    
+    # def get_queryset(self):
+    #     user = self.request.user
+
+    #     if user.is_staff:
+    #         return Member.objects.all()
+        
+    #     # Get communities this user manages
+    #     managed_communities = Community.objects.filter(community_head=user)
+    #     return Member.objects.filter(community__in=managed_communities)
 
         
 
@@ -44,15 +62,11 @@ class MemberCreateView(CreateView):
 
         # Check if a member with the same name already exists
         if Member.objects.filter(username=new_member).exists():
-            print("Member Already Exist")
+            
             messages.error(self.request, f'Member with name "{new_member }" Already Exists')
             return self.form_invalid(form)
-            # else:
-            #     user = form.save()
-            #     User.objects.create(
-            #         username=user.username,
-            #     )
-            messages.success(self.request, "New Member Account Has Been Created Successfully")
+            
+        messages.success(self.request, "New Member Account Has Been Created Successfully")
         return super().form_valid(form)
 
 
@@ -62,9 +76,41 @@ class MemberUpdateView(StaffRequiredMixin, UpdateView):
     template_name = 'member/forms/member_update.html'
     success_url = _('member_list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["member_name"] = self.object.username.get_full_name()  # or .username if just the username
+        return context
+
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        user = self.request.user
+
+        if not user.is_staff:
+            form.fields["username"].widget = forms.HiddenInput()
+            form.fields["community"].widget = forms.HiddenInput()
+            form.fields["role"].widget = forms.HiddenInput()
+            # Community heads can see but not change the field
+            # form.fields["community"].widget.attrs.update({
+            #     "class": "form-control",
+            #     "readonly": "readonly",
+            #     "style": "pointer-events: none; background-color: #e9ecef;" 
+            # })
+            
+        # else:
+        #     # Staff can choose the community
+        #     form.fields["community"].widget.attrs.update({
+        #         "class": "form-control"
+        #     })
+
+        return form
+
     def form_valid(self, form):
         dob = form.cleaned_data['dob']
         current_date = datetime.now().date()
+
+        
+        
 
         # Checking entry for Date of Birth
         if dob:
@@ -85,16 +131,20 @@ class MemberDeleteView(StaffRequiredMixin, DeleteView):
 class CommunityListView(StaffRequiredMixin, ListView):
     model = Community
     template_name = 'community/community_list.html'
-    context_object_name = 'communityList'
-
-    def get_queryset(self):
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         user = self.request.user
+        
+        is_community_head = Community.objects.filter(community_head=user).exists()
+        
         if user.is_staff:
-            return Community.objects.prefetch_related('community_members')
-        elif Community.objects.filter(community_head=user).exists():
-            return Community.objects.filter(community_head=user).prefetch_related('community_members')
-        else:
-            return Community.objects.none()
+            context["communityList"] =  Community.objects.prefetch_related('community_members')
+        elif is_community_head:
+            context["communityList"] = Community.objects.filter(community_head=user).prefetch_related('community_members')
+        
+        return context
+    
     
 class CommunityMemberListView(StaffRequiredMixin, TemplateView):
     template_name = 'community/community_members.html'

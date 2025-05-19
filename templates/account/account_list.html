@@ -5,7 +5,7 @@
     {% include 'base/error_messages.html' %}
     <!-- To Display Messages If Any -->
   </div>
-  {% if user.is_staff or user.managed_community.exists %}
+    
     <div class="container">
       <div class="page-inner">
         <div class="row">
@@ -58,7 +58,7 @@
     <div class="fixed-action-btn btn-outline-link">
       <a href="{% url 'register' %}" class="btn-floating btn-icon-prepend" title="Create New Account"><i class="fas fa-plus-circle"></i></a>
     </div>
-  {% else %}
-    <h1>You Are Smart Enough To View This Page</h1>
-  {% endif %}
+  
+    {% comment %} <h1>You Are Smart Enough To View This Page</h1> {% endcomment %}
+  
 {% endblock %}

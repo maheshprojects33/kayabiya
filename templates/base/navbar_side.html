@@ -41,27 +41,37 @@
               <p>Members</p>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a data-bs-toggle="collapse" href="#sidebarLayouts">
+              <i class="fas fa-th-list"></i>
+              <p>Deposit</p>
+              <span class="caret"></span>
+            </a>
+            <div class="collapse" id="sidebarLayouts">
+              <ul class="nav nav-collapse">
+                <li>
+                  <a href="{% url 'deposit_list' %}"><span class="sub-item">View All</span></a>
+                </li>
+                <li>
+                  <a href="{% url 'deposit_create' %}"><span class="sub-item">Single Entry</span></a>
+                </li>
+                <li>
+                  <a href="{% url 'multideposit_create' %}"><span class="sub-item">Multiple Entry</span></a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+        {% else %}
+          <li class="nav-item">
+            <a href="{% url 'deposit_list' %}">
+              <i class="fas fa-th-list"></i>
+              <p> My Deposits </p>
+            </a>
+          </li>
         {% endif %}
-        <li class="nav-item">
-          <a data-bs-toggle="collapse" href="#sidebarLayouts">
-            <i class="fas fa-th-list"></i>
-            <p>Deposit</p>
-            <span class="caret"></span>
-          </a>
-          <div class="collapse" id="sidebarLayouts">
-            <ul class="nav nav-collapse">
-              <li>
-                <a href="{% url 'deposit_list' %}"><span class="sub-item">View All</span></a>
-              </li>
-              <li>
-                <a href="{% url 'deposit_create' %}"><span class="sub-item">Single Entry</span></a>
-              </li>
-              <li>
-                <a href="{% url 'multideposit_create' %}"><span class="sub-item">Multiple Entry</span></a>
-              </li>
-            </ul>
-          </div>
-        </li>
+
         <li class="nav-item">
           <a data-bs-toggle="collapse" href="#forms">
             <i class="fas fa-pen-square"></i>
