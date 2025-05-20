@@ -42,7 +42,7 @@
                         <tr>
                           <td class="text-center">{{ member.member_id }}</td>
                           <td>
-                            <div class="avatar-sm d-flex align-items-center">
+                            <div class="d-flex align-items-center">
                               {% if member.profile_picture %}
                                 <a href="{% url 'update_member' member.pk %}"><img src="{{ member.profile_picture.url }}" alt="PP" class="avatar-img rounded-circle" style="width: 40px; height: 40px;" /></a>
                               {% elif member.gender == 'Male' %}

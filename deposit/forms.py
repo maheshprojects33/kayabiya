@@ -3,6 +3,8 @@ from .models import *
 from django.forms import modelformset_factory
 
 
+
+
 class DepositForm(forms.ModelForm):
     class Meta:
         model = Deposit
@@ -13,30 +15,33 @@ class DepositForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-        # Use ModelChoiceField to ensure the form returns a Member instance
-        self.fields["account"] = forms.ModelChoiceField(
-            queryset=Member.objects.all(),
-            widget=forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "Select or enter account",
-                    "list": "usernames-datalist",
-                }
-            ),
-            required=True,
-        )
+        # Use ModelChoiceField to ensure the form returns a Member instance as per the login user
+        if user.is_staff:
+            self.fields["account"] = forms.ModelChoiceField(
+                queryset=Member.objects.all(),
+                widget=forms.Select(attrs={"class": "form-control"}),
+                required=True,
+                )
+        elif user.managed_community.exists(): # Checks and filter the Member base on Community Head
+            communities = user.managed_community.all()
+            self.fields["account"] = forms.ModelChoiceField(
+                queryset=Member.objects.filter(community__in=communities),
+                widget=forms.Select(attrs={"class": "form-control"}),
+                required=True,
+                )
+        else: # Not necessary Code and Normal Member Can't Access This Form
+            self.fields["account"] = forms.ModelChoiceField(
+                queryset=Member.objects.none(),
+                widget=forms.Select(attrs={"class": "form-control"}),
+                required=True,
+                )
+        
         self.fields["account"].widget.attrs.update({"class": "form-control"})
         self.fields["deposit_amount"].widget.attrs.update({"class": "form-control"})
         self.fields["deposit_by"].widget.attrs.update({"class": "form-control"})
         self.fields["remarks"].widget.attrs.update({"class": "form-control"})
 
-        # Store datalist HTML to render in the template
-        members = Member.objects.all()
-        self.datalist = "".join(
-            [
-                f'<option value="{member.id}">{member.username.get_full_name()} ({member.username})</option>'
-                for member in members
-            ]
-        )
+        

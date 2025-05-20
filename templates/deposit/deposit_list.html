@@ -39,11 +39,13 @@
       </div>
     </div>
   </div>
+  
+ 
 
   {% if user.is_staff or is_community_head %}
   <!-- Floating Button -->
   <div class="fixed-action-btn btn-outline-link">
-    <a href="{% url 'deposit_create' %}" class="btn-floating btn-icon-prepend" title="Add New Deposit"><i class="fas fa-plus-circle"></i></a>
+    <a href="" class="btn-floating btn-icon-prepend" title="Add New Deposit"><i class="fas fa-plus-circle"></i></a>
   </div>
   {% endif %}
 

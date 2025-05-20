@@ -5,7 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class Dashboard(LoginRequiredMixin, TemplateView):
-    template_name = 'base/base.html'
+    # template_name = 'base/base.html'
+    template_name = 'dashboard/dashboard.html'
 
     
     

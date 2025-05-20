@@ -45,6 +45,7 @@
 
     <form method="post">
       {% csrf_token %}
+      {{ formset.management_form }}
       <table class="table table-bordered table-bordered-bd-info table-responsive">
         <thead>
           <tr>
@@ -65,13 +66,73 @@
           </tr>
         </thead>
         <tbody id="multi-form">
-          {% include 'deposit/forms/htmx_multideposit_create.html' %}
+          {% for form in formset %}
+            <tr>
+              {% for field in form.visible_fields %}
+                <td>
+                  {{ field }}
+                  {% if field.errors %}
+                    <ul class="text-danger">
+                      {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </td>
+              {% endfor %}
+              <td><a class="btn btn-danger remove-row">X</a></td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
-      <button type="button" class="btn btn-success" hx-get="{% url 'multideposit_create' %}" hx-target="#multi-form" hx-swap="beforeend">Add More</button>
+
+      <button type="button" class="btn btn-success" id="add-row">Add More</button>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   {% else %}
     <h1>You Are Smart Enough To View This Page</h1>
   {% endif %}
 {% endblock %}
+
+{% block extrajs %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const formsetPrefix = '{{ formset.prefix }}';
+    const totalForms = document.getElementById('id_' + formsetPrefix + '-TOTAL_FORMS');
+    const formTable = document.getElementById('multi-form');
+    const addRowBtn = document.getElementById('add-row');
+  
+    // Add new row
+    addRowBtn.addEventListener('click', function() {
+      const currentFormCount = parseInt(totalForms.value);
+      const emptyRow = formTable.querySelector('.form-row').cloneNode(true);
+  
+      // Clear input values in the cloned row
+      emptyRow.querySelectorAll('input, select, textarea').forEach(function(input) {
+        input.value = '';
+        // Update the name and id attributes
+        if (input.name) {
+          input.name = input.name.replace(/-(\\d+)-/, '-' + currentFormCount + '-');
+        }
+        if (input.id) {
+          input.id = input.id.replace(/-(\\d+)-/, '-' + currentFormCount + '-');
+        }
+      });
+  
+      formTable.appendChild(emptyRow);
+      totalForms.value = currentFormCount + 1;
+    });
+  
+    // Remove row
+    formTable.addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-row')) {
+        const rows = formTable.querySelectorAll('.form-row');
+        if (rows.length > 1) {
+          e.target.closest('.form-row').remove();
+          totalForms.value = rows.length - 1;
+        }
+      }
+    });
+  });
+  </script>
+{% endblock extrajs %}

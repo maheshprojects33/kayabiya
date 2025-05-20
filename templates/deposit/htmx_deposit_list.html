@@ -9,7 +9,7 @@
         <td>{{ deposit.remarks }}</td>
 
         <td class="text-center">
-          <a href="" class="btn btn-icon btn-round btn-info btn-xs" data-bs-toggle="tooltip" title="Edit Data"><i class="fa fa-edit"></i></a>
+          <a href="{% url 'deposit_update' deposit.pk %}" class="btn btn-icon btn-round btn-info btn-xs" data-bs-toggle="tooltip" title="Edit Data"><i class="fa fa-edit"></i></a>
           &nbsp;|&nbsp;
           <span class="btn btn-icon btn-round btn-xs btn-danger" data-bs-toggle="tooltip" title="Delete Data" hx-delete="{% url 'delete_deposit' deposit.pk %}" hx-target="#deposit_list" hx-confirm="Are You Sure"><i class="fas fa-trash-alt"></i></span>
         </td>

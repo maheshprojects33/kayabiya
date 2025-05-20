@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block content %}
-  {% if user.is_staff %}
+  
     <div class="d-flex justify-content-center align-items-center flex-column flex-md-row pt-2 pb-4">
       <div class="text-center">
         <h3 class="fw-bold mb-3">Single Deposit Form</h3>
@@ -43,11 +43,9 @@
   {% endfor %}
 
   <button type="submit" class="btn btn-primary">Submit</button>
-  <a href="" class="btn btn-danger">Cancel</a>
+  <a href="{% url 'deposit_list' %}" class="btn btn-danger">Cancel</a>
 </form>
 
-  {% else %}
-    <h1>You Are Smart Enough To View This Page</h1>
-  {% endif %}
+
 {% endblock %}
 
