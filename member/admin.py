@@ -12,7 +12,6 @@ class MemberAdmin(admin.ModelAdmin):
         "gender",
         "dob",
         "age",
-        "member_id",
         "profile_picture",
         "citizen_copy",
     ]

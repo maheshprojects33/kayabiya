@@ -17,6 +17,8 @@ from member.models import Community
 from account.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from member.utils import get_individual_deposits
+
 # Create your views here.
 class DepositView(LoginRequiredMixin, ListView):
     model = Deposit
@@ -29,13 +31,19 @@ class DepositView(LoginRequiredMixin, ListView):
         is_community_head = Community.objects.filter(community_head=login_user)
         context["is_community_head"] = is_community_head.exists()
 
+        individual_deposits = get_individual_deposits()
+
         if login_user.is_staff:
             context["deposits"] = Deposit.objects.all()
+            context["individual_deposits"] = individual_deposits.order_by('username__first_name')
+            
+
         elif is_community_head.exists():
             # Community head sees deposits of members in their managed communities
-            
             members = Member.objects.filter(community__in=is_community_head)
             context["deposits"] = Deposit.objects.filter(account__in=members)
+            
+            context["individual_deposits"] = individual_deposits.filter(community__community_name=is_community_head.first()).order_by('username__first_name')
         else:
              # Normal member sees only their own deposits
             

@@ -8,6 +8,27 @@
   </div>
   <!-- First Row -->
   <div class="row">
+    <div class="card card-stats card-round">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-icon">
+            <div class="icon-big text-center icon-info bubble-shadow-small">
+              <i class="fas fa-user-check"></i>
+            </div>
+          </div>
+          <div class="col col-stats ms-3 ms-sm-0">
+            <div class="numbers">
+              <p class="card-category">Community Head</p>
+              <h4 class="card-title">{{ head.community_name }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Row -->
+  <div class="row">
     <div class="col-sm-6 col-md-3">
       <div class="card card-stats card-round">
         <div class="card-body">
@@ -20,32 +41,14 @@
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
                 <p class="card-category">Members</p>
-                <h4 class="card-title">1,294</h4>
+                <h4 class="card-title">{{ total_community_members }}</h4>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-md-3">
-      <div class="card card-stats card-round">
-        <div class="card-body">
-          <div class="row align-items-center">
-            <div class="col-icon">
-              <div class="icon-big text-center icon-info bubble-shadow-small">
-                <i class="fas fa-user-check"></i>
-              </div>
-            </div>
-            <div class="col col-stats ms-3 ms-sm-0">
-              <div class="numbers">
-                <p class="card-category">Communities</p>
-                <h4 class="card-title">50</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
     <div class="col-sm-6 col-md-3">
       <div class="card card-stats card-round">
         <div class="card-body">
@@ -58,7 +61,7 @@
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
                 <p class="card-category">Total Deposit</p>
-                <h4 class="card-title">Rs. 1050345</h4>
+                <h4 class="card-title">Rs. {{ communityHead_total_deposit }}</h4>
               </div>
             </div>
           </div>
@@ -76,6 +79,25 @@
             </div>
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
+                <p class="card-category">Total Loan</p>
+                <h4 class="card-title">57685</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-icon">
+              <div class="icon-big text-center icon-warning bubble-shadow-small">
+                <i class="far fa-check-circle"></i>
+              </div>
+            </div>
+            <div class="col col-stats ms-3 ms-sm-0">
+              <div class="numbers">
                 <p class="card-category">Total Interest</p>
                 <h4 class="card-title">57685</h4>
               </div>
@@ -85,150 +107,63 @@
       </div>
     </div>
   </div>
-  <!-- Second Row -->
-  <div class="row">
-    <div class="card card-round">
-      <div class="card-header">
-        <div class="card-head-row">
-          <div class="table-responsive">
-            <div class="card-title">Community Total Deposits</div>
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>S.No.</th>
-                  <th>Community</th>
-                  <th>Total Deposit</th>
-                  <th>Total Interest</th>
-                  <th>Total Loan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Farsidol Community Saving</td>
-                  <td>Rs. 85,357.84</td>
-                  <td>Rs. 15,315.76</td>
-                  <td>Rs. 20,000</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Chhampi Devi Community Saving</td>
-                  <td>Rs. 1,85,357.84</td>
-                  <td>Rs. 1,15,315.76</td>
-                  <td>Rs. 1,20,000</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>GoldenTemple Community</td>
-                  <td>Rs. 58,357.84</td>
-                  <td>Rs. 55,315.76</td>
-                  <td>Rs. 40,478.87</td>
-                </tr>
-                
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      {% comment %} <div class="card-body">
-        <div class="chart-container" style="min-height: 375px">
-          <canvas id="statisticsChart"></canvas>
-        </div>
-        <div id="myChartLegend"></div>
-      </div> {% endcomment %}
-    </div>
-  </div>
+
   <!-- Third Row -->
   <div class="row">
     <div class="col-md-6">
       <div class="card card-primary card-round">
         <div class="card-header">
-          <div class="card-head-row">
+          <div class="card-head-row justify-content-center">
             <div class="card-title">Top 10 Highest Depositor</div>
           </div>
-          <div class="card-category">From all Communities</div>
         </div>
         <div class="card-body pb-0">
-          <div class="mb-4 mt-2">
-            <div class="card-list py-4">
+          <div class="card-list py-0">
+            {% for individual_total in communityHead_members_deposit %}
               <div class="item-list">
+                {% if individual_total.profile_picture %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="/media/{{ individual_total.profile_picture }}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
-                <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
-                </div>
-                <h5>Rs. 45000/-</h5>
-              </div>
-              <div class="item-list">
+                {% elif individual_total.gender == "Male" %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="{% static 'assets/image/profile_male.jpg' %}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
-                <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
-                </div>
-                <h5>Rs. 45000/-</h5>
-              </div>
-              <div class="item-list">
+                {% else %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="{% static 'assets/image/profile_female.png' %}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
+                {% endif %}
                 <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
+                  <div class="username">{{ individual_total.username__first_name|title }} {{ individual_total.username__last_name|title }}</div>
                 </div>
-                <h5>Rs. 45000/-</h5>
+                <h5>Rs. {{ individual_total.total_deposit }}/-</h5>
               </div>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </div>
     </div>
-
     <div class="col-md-6">
       <div class="card card-info card-round">
         <div class="card-header">
-          <div class="card-head-row">
+          <div class="card-head-row justify-content-center">
             <div class="card-title">Top 10 Highest Borrower</div>
           </div>
-          <div class="card-category">From all Communities</div>
         </div>
         <div class="card-body pb-0">
-          <div class="mb-4 mt-2">
-            <div class="card-list py-4">
+          <div class="card-list py-0">
+            {% for individual_total in individual_total_deposit %}
               <div class="item-list">
                 <div class="avatar">
                   <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
                 </div>
                 <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
+                  <div class="username">{{ individual_total.username__first_name|title }} {{ individual_total.username__last_name|title }}</div>
                 </div>
-                <h5>Rs. 45000/-</h5>
+                <h5>Rs. {{ individual_total.total_deposit }}/-</h5>
               </div>
-              <div class="item-list">
-                <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
-                </div>
-                <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
-                </div>
-                <h5>Rs. 45000/-</h5>
-              </div>
-              <div class="item-list">
-                <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
-                </div>
-                <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
-                </div>
-                <h5>Rs. 45000/-</h5>
-              </div>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </div>

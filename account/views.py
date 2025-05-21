@@ -49,6 +49,12 @@ class UserRegisterView(StaffRequiredMixin, CreateView):
         
     def form_valid(self, form):
         user = form.save()
+
+        # Firstname, Lastname and username text case converstion
+        user.first_name = user.first_name.title()
+        user.last_name = user.last_name.title()
+        user.username = user.username.lower()
+        user.save()
         
         # Get the single community where the current user is a head
         try:

@@ -165,7 +165,13 @@
         <li class="nav-item topbar-user dropdown hidden-caret">
           <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
             <div class="avatar-sm">
+              {% if user.member.profile_picture %}
+              <img src="{{ user.member.profile_picture.url }}" alt="PP" class="avatar-img rounded-circle" />
+              {% elif user.member.gender == "Male" %}
               <img src="{% static 'assets/image/profile_male.jpg' %}" alt="PP" class="avatar-img rounded-circle" />
+              {% else %}
+              <img src="{% static 'assets/image/profile_female.png' %}" alt="PP" class="avatar-img rounded-circle" />
+              {% endif %}
             </div>
             <span class="profile-username">
               <span class="op-7">Hi,</span>

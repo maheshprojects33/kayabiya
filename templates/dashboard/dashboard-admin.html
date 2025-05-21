@@ -1,0 +1,268 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+    <div>
+      <h3 class="fw-bold mb-3">Dashboard</h3>
+    </div>
+  </div>
+  <!-- First Row -->
+  <div class="row">
+    <div class="col-sm-6 col-md-3">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-icon">
+              <div class="icon-big text-center icon-primary bubble-shadow-small">
+                <i class="fas fa-users"></i>
+              </div>
+            </div>
+            <div class="col col-stats ms-3 ms-sm-0">
+              <div class="numbers">
+                <p class="card-category">Members</p>
+                <h4 class="card-title">{{ total_members }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-icon">
+              <div class="icon-big text-center icon-info bubble-shadow-small">
+                <i class="fas fa-user-check"></i>
+              </div>
+            </div>
+            <div class="col col-stats ms-3 ms-sm-0">
+              <div class="numbers">
+                <p class="card-category">Communities</p>
+                <h4 class="card-title">{{ total_communities }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-icon">
+              <div class="icon-big text-center icon-success bubble-shadow-small">
+                <i class="fas fa-luggage-cart"></i>
+              </div>
+            </div>
+            <div class="col col-stats ms-3 ms-sm-0">
+              <div class="numbers">
+                <p class="card-category">Total Deposit</p>
+                <h4 class="card-title">Rs. {{ total_deposit }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-icon">
+              <div class="icon-big text-center icon-secondary bubble-shadow-small">
+                <i class="far fa-check-circle"></i>
+              </div>
+            </div>
+            <div class="col col-stats ms-3 ms-sm-0">
+              <div class="numbers">
+                <p class="card-category">Total Loan</p>
+                <h4 class="card-title">57685</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Second Row -->
+  <div class="row">
+    <div class="card card-round">
+      <div class="card-header">
+        <div class="card-head-row">
+          <div class="table-responsive">
+            <div class="card-title">Community Total Deposits</div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Community</th>
+                  <th>Total Deposit</th>
+                  <th>Total Loan</th>
+                  <th>Net Interest</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for community_total in community_total_deposit %}
+                                
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                  <td>{{community_total.community_name}}</td>
+                  <td>Rs. {{community_total.total_deposit}}</td>
+                  <td>Rs. 15,315.76</td>
+                  <td>Rs. 20,000</td>
+                </tr>
+                {% endfor %}
+                
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% comment %} <div class="card-body">
+        <div class="chart-container" style="min-height: 375px">
+          <canvas id="statisticsChart"></canvas>
+        </div>
+        <div id="myChartLegend"></div>
+      </div> {% endcomment %}
+    </div>
+  </div>
+  <!-- Third Row -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card card-primary card-round">
+        <div class="card-header">
+          <div class="card-head-row">
+            <div class="card-title">Top 10 Highest Depositor</div>
+          </div>
+          <div class="card-category">From all Communities</div>
+        </div>
+        <div class="card-body pb-0">
+          <div class="mb-4 mt-2">
+            <div class="card-list py-4">
+              {% for individual_total in individual_total_deposit %}
+              <div class="item-list">
+                <div class="avatar">
+                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                </div>
+                <div class="info-user ms-3">
+                  <div class="username">{{ individual_total.username__first_name|title }} {{individual_total.username__last_name|title}} </div>
+                  <div class="status">{{ individual_total.community__community_name }}</div>
+                </div>
+                <h5>Rs. {{ individual_total.total_deposit }}/-</h5>
+              </div>
+              {% endfor %}
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card card-info card-round">
+        <div class="card-header">
+          <div class="card-head-row">
+            <div class="card-title">Top 10 Highest Borrower</div>
+          </div>
+          <div class="card-category">From all Communities</div>
+        </div>
+        <div class="card-body pb-0">
+          <div class="mb-4 mt-2">
+            <div class="card-list py-4">
+              <div class="item-list">
+                <div class="avatar">
+                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                </div>
+                <div class="info-user ms-3">
+                  <div class="username">Jimmy Denis</div>
+                  <div class="status">Graphic Designer</div>
+                </div>
+                <h5>Rs. 45000/-</h5>
+              </div>
+              <div class="item-list">
+                <div class="avatar">
+                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                </div>
+                <div class="info-user ms-3">
+                  <div class="username">Jimmy Denis</div>
+                  <div class="status">Graphic Designer</div>
+                </div>
+                <h5>Rs. 45000/-</h5>
+              </div>
+              <div class="item-list">
+                <div class="avatar">
+                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                </div>
+                <div class="info-user ms-3">
+                  <div class="username">Jimmy Denis</div>
+                  <div class="status">Graphic Designer</div>
+                </div>
+                <h5>Rs. 45000/-</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Last Row -->
+  <div class="row">
+    <div class="card card-round">
+      <div class="card-header">
+        <div class="card-head-row card-tools-still-right">
+          <div class="card-title">Recent Transaction</div>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <!-- Projects table -->
+          <table class="table align-items-center mb-0">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Community</th>
+                <th scope="col" class="text-end">Date & Time</th>
+                <th scope="col" class="text-end">Amount</th>
+                <th scope="col" class="text-end">Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <button class="btn btn-icon btn-round btn-success btn-sm me-2"><i class="fa fa-check"></i></button>
+                  Deposit on Mahesh Dangol's Account
+                </th>
+                <td class="text-start">Farsidol Community Saving</td>
+                <td class="text-end">Mar 19, 2020, 2.45pm</td>
+                <td class="text-end">Rs. 5000/-</td>
+                <td class="text-end">Saving of May</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <button class="btn btn-icon btn-round btn-danger btn-sm me-2"><i class="fa fa-check"></i></button>
+                  Borrow by Mahesh Dangol
+                </th>
+                <td class="text-start">Farsidol Community Saving</td>
+                <td class="text-end">Mar 19, 2020, 2.45pm</td>
+                <td class="text-end">Rs. 5000/-</td>
+                <td class="text-end">Saving of May</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <button class="btn btn-icon btn-round btn-info btn-sm me-2"><i class="fa fa-check"></i></button>
+                  Interest Paid by Mahesh Dangol
+                </th>
+                <td class="text-start">Farsidol Community Saving</td>
+                <td class="text-end">Mar 19, 2020, 2.45pm</td>
+                <td class="text-end">Rs. 5000/-</td>
+                <td class="text-end">Saving of May</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -5,7 +5,7 @@
     {% include 'base/error_messages.html' %}
     <!-- To Display Messages If Any -->
   </div>
-
+<!-- All Deposit Lists of All Members -->
   <div class="container">
     <div class="page-inner">
       <div class="row">
@@ -38,6 +38,46 @@
         </div>
       </div>
     </div>
+
+<!-- Individual Total Deposit Lists -->
+
+  <div class="container">
+    <div class="page-inner">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title text-center">Individual Total Deposit Lists</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table id="multi-filter-select-individual-deposit" class="display table table-hover">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Member's Name</th>
+                      <th>Total Deposit</th>
+                      
+                    </tr>
+                  </thead>
+
+                  <tbody id="deposit_list">
+                    {% for individual_deposit in individual_deposits %}
+                    <tr>
+                      <td>{{ individual_deposit.member_id }}</td>
+                      <td>{{ individual_deposit.username__first_name }} {{ individual_deposit.username__last_name }}</td>
+                      <td>{{ individual_deposit.total_deposit }}</td>
+                    </tr>
+                    
+                      {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   
  
@@ -45,7 +85,7 @@
   {% if user.is_staff or is_community_head %}
   <!-- Floating Button -->
   <div class="fixed-action-btn btn-outline-link">
-    <a href="" class="btn-floating btn-icon-prepend" title="Add New Deposit"><i class="fas fa-plus-circle"></i></a>
+    <a href="{% url 'deposit_create' %}" class="btn-floating btn-icon-prepend" title="Add New Deposit"><i class="fas fa-plus-circle"></i></a>
   </div>
   {% endif %}
 

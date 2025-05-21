@@ -34,10 +34,14 @@ $("#multi-filter-select").DataTable({
     },
 });
 
-// Add Row
-$("#add-row").DataTable({
-    pageLength: 5,
+// For Individual Deposits Total Filter
+$("#multi-filter-select-individual-deposit").DataTable({
+    pageLength: 15
 });
+// Add Row
+// $("#add-row").DataTable({
+//     pageLength: 5,
+// });
 
 var action =
     '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
