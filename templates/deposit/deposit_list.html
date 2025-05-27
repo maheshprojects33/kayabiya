@@ -41,7 +41,7 @@
 
 <!-- Individual Total Deposit Lists -->
 
-{% if user.is_staff or user.managed_community.exists %}
+{% if user.is_staff or is_community_head %}
 
   <div class="container">
     <div class="page-inner">

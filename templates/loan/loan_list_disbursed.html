@@ -35,7 +35,7 @@
                         <th>Guarantor</th>
                         <th>Repayment Type</th>
                         
-                        {% if user.is_staff %}
+                        {% if user.is_staff or user.managed_community.exists %}
                         <th class="text-center">Action</th>
                         {% endif %}
                       </tr>
@@ -71,7 +71,7 @@
                           
                           
                           
-                          {% if user.is_staff %}
+                          {% if user.is_staff or user.managed_community.exists %}
                           <td class="text-center">
                             <a href="{% url 'loan_update' loan.pk %}" class="btn btn-icon btn-round btn-info btn-xs" data-bs-toggle="tooltip" title="Edit Member"><i class="fa fa-user-edit"></i></a>
                             &nbsp;|&nbsp;

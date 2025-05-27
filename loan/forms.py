@@ -36,7 +36,9 @@ class LoanApplyAdminForm(forms.ModelForm):
         user = kwargs.pop('user', None) 
         super().__init__(*args, **kwargs)
         
-        instance = kwargs.get('instance') # To check the instance status
+        instance = self.instance # To check the instance status
+        print(instance.status)
+        
 
         # Limit the status choices based on the current instance status
         if instance.status == 'Pending':
