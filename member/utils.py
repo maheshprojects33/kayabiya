@@ -1,4 +1,4 @@
-from member.models import Member
+from member.models import Member, Community
 from django.db.models import Sum
 
 def get_individual_deposits():
@@ -16,3 +16,7 @@ def get_individual_deposits():
         )
         
     )
+
+def get_community_head(login_user):
+    is_community_head = Community.objects.filter(community_head=login_user)
+    return is_community_head

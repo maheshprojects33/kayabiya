@@ -36,3 +36,6 @@
 - If any borrow happends from respective community log the transation
 - If from respective community pays or receives the Interest log the record
 
+
+# Member Detail Fields
+- need to add occupation

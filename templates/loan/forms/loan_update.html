@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div class="col-12 grid-margin stretch-card text-warning" style="justify-content: center;">
+    <h1>Update Loan's Details of {{ member_name|title }}</h1>
+  </div>
+  {% include 'base/error_messages.html' %}
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <form id="loan-update-form" class="forms-sample" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {{ form.as_p }}
+
+          <button type="submit" class="btn btn-primary mr-2">Update</button>
+          <a class="btn btn-dark" href="{{ cancel_url }}">Cancel</a>
+        </form>
+      </div>
+    </div>
+
+{% endblock %}

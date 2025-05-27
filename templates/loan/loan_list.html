@@ -1,0 +1,112 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+  <div>
+    {% include 'base/error_messages.html' %}
+    <!-- To Display Messages If Any -->
+  </div>
+  
+    <div class="container">
+      <div class="page-inner">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Loan List</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="multi-filter-select" class="display table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Member ID</th>
+                        <th>Member Name</th>
+                        <th>Loan Amount</th>
+                        <th>Loan Tenure</th>
+                        <th>Interest Rate</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                        <th>Days To Expiry</th>
+                        <th>Application Date</th>
+                        <th>Approved Date</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Settled Date</th>
+                        <th>Collateral</th>
+                        <th>Collateral Proof</th>
+                        <th>Guarantor</th>
+                        <th>Repayment Type</th>
+                        <th>Penalty Type</th>
+                        <th>Penalty Value</th>
+                        <th>Rejected Reason</th>
+                        {% if user.is_staff %}
+                        <th class="text-center">Action</th>
+                        {% endif %}
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                     
+                      {% for loan in loans %}
+                        <tr>
+                          <td class="text-left">{{ loan.member_id }}</td>
+                          <td class="text-left">{{ loan.member }}</td>
+                          <td class="text-left">{{ loan.amount }}</td>
+                          {% if loan.tenure == 1 %}
+                          <td class="text-left">{{ loan.tenure }} month</td>
+                          {% else %}
+                          <td class="text-left">{{ loan.tenure }} months</td>
+                          {% endif %}
+                          <td class="text-left">{{ loan.interest_rate }} %</td>
+                          <td class="text-left">{{ loan.purpose }}</td>
+                          <td class="text-left">{{ loan.status }}</td>
+                          <td class="text-left">{{ loan.days_to_expiry }}</td>
+                          <td class="text-left">{{ loan.application_date }}</td>
+                          <td class="text-left">{{ loan.approved_date }}</td>
+                          <td class="text-left">{{ loan.start_date }}</td>
+                          <td class="text-left">{{ loan.end_date }}</td>
+                          <td class="text-left">{{ loan.settled_date }}</td>
+                          <td class="text-left">{{ loan.collateral }}</td>
+                          <td class="text-left">{{ loan.collateral_proof }}</td>
+                          <td class="text-left">{{ loan.guarantor }}</td>
+                          <td class="text-left">{{ loan.repayment_type }}</td>
+                          <td class="text-left">{{ loan.penalty_type }}</td>
+                          {% if loan.penalty_type == "Rate" %}
+                          <td class="text-left">{{ loan.penalty_value }} %</td>
+                          {% else %}
+                          <td class="text-left">Rs. {{ loan.penalty_value }}</td>
+                          {% endif %}
+                          <td class="text-left">{{ loan.rejected_reason }}</td>
+                          
+                          
+                          {% if user.is_staff %}
+                          <td class="text-center">
+                            <a href="{% url 'loan_update' loan.pk %}" class="btn btn-icon btn-round btn-info btn-xs" data-bs-toggle="tooltip" title="Edit Member"><i class="fa fa-user-edit"></i></a>
+                            &nbsp;|&nbsp;
+                            <a href="" class="btn btn-icon btn-round btn-xs btn-danger" data-bs-toggle="tooltip" title="Delete Member"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                          {% endif %}
+                        </tr>
+                      {% endfor %}
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+   
+    <!-- Floating Button -->
+    <div class="fixed-action-btn btn-outline-link">
+      <a href="{% url 'loan_apply' %}" class="btn-floating btn-icon-prepend" title="Apply For New Loan"><i class="fas fa-plus-circle"></i></a>
+    </div>
+
+  
+    {% comment %} {% if not user.is_staff %}
+    <h1>You Are Smart Enough To View This Page</h1>
+    {% endif %} {% endcomment %}
+{% endblock %}

@@ -39,9 +39,7 @@ class DepositForm(forms.ModelForm):
                 required=True,
                 )
         
-        self.fields["account"].widget.attrs.update({"class": "form-control"})
-        self.fields["deposit_amount"].widget.attrs.update({"class": "form-control"})
-        self.fields["deposit_by"].widget.attrs.update({"class": "form-control"})
-        self.fields["remarks"].widget.attrs.update({"class": "form-control"})
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "form-control"})
 
         

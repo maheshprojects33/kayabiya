@@ -7,7 +7,7 @@ from member.models import Member, Community
 from deposit.models import Deposit
 
 from django.db.models import Sum
-from member.utils import get_individual_deposits
+from member.utils import get_individual_deposits, get_community_head
 
 
 # Create your views here.
@@ -17,11 +17,12 @@ class Dashboard(LoginRequiredMixin, ListView):
 
     def get_template_names(self):
         login_user = self.request.user
-        is_community_head = Community.objects.filter(community_head=login_user)
+        # is_community_head = Community.objects.filter(community_head=login_user)
+        
 
         if login_user.is_staff:
             return ['dashboard/dashboard-admin.html']
-        elif is_community_head:
+        elif get_community_head(login_user):
             return ['dashboard/dashboard-head.html']
         else:
             return ['dashboard/dashboard-member.html']
@@ -30,7 +31,7 @@ class Dashboard(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         login_user = self.request.user
-        is_community_head = Community.objects.filter(community_head=login_user)
+        is_community_head = get_community_head(login_user)
 
         
 
