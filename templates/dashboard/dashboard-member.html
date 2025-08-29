@@ -79,7 +79,11 @@
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
                 <p class="card-category">Total Deposit</p>
+                {% if not member_total_deposit.total_deposit %}
+                <h4 class="card-title">Rs. 0</h4>
+                {% else %}
                 <h4 class="card-title">Rs. {{ member_total_deposit.total_deposit }}</h4>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -98,7 +102,11 @@
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
                 <p class="card-category">Total Loan</p>
-                <h4 class="card-title">57685</h4>
+                {% if not member_total_loan.total_loan %}
+                <h4 class="card-title">Rs. 0</h4>
+                {% else %}
+                <h4 class="card-title">Rs. {{ member_total_loan.total_loan }}</h4>
+                {% endif %}
               </div>
             </div>
           </div>

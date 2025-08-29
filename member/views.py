@@ -30,11 +30,9 @@ class MemberView(StaffRequiredMixin, ListView):
         elif is_community_head:
             managed_communities = Community.objects.filter(community_head=user)
             context["members"] = Member.objects.filter(
-                Q(community__in=managed_communities) | Q(community__isnull=True)
-            )
+                Q(community__in=managed_communities) | Q(community__isnull=True) 
+            ).exclude(role='Community-Head')
             
-        
-
         return context
     
     # def get_queryset(self):
@@ -154,7 +152,7 @@ class CommunityMemberListView(StaffRequiredMixin, TemplateView):
         user = self.request.user
         community = get_object_or_404(Community, pk=self.kwargs['pk'])
         context['community'] = community
-        context['members'] = community.community_members.all()
+        context['members'] = community.community_members.all().exclude(role='Community-Head') # Exclude Community Head from the members list
         return context
 
 class CommunityCreateView(CreateView):

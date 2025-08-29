@@ -1,11 +1,13 @@
 from email import message
 from urllib import response
 from django.shortcuts import render
-from django.views.generic import ListView, TemplateView, CreateView, UpdateView
+from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DetailView
 from django.urls import reverse_lazy as _
 
-from .models import Loan
+from .models import *
 from .forms import *
+from .utils import *
+from loan.models import LoanAccount
 from member.utils import get_community_head
 from member.models import Member
 
@@ -17,13 +19,16 @@ from django.contrib import messages
 from account.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.db.models import Sum
+from decimal import Decimal
+
 
 
 # Create your views here.
-class LoanListView(ListView):
-    model = Loan
-    template_name = 'loan/loan_list.html'
-    context_object_name = 'loans'
+# class LoanListView(ListView):
+#     model = Loan
+#     template_name = 'loan/loan_list.html'
+#     context_object_name = 'loans'
 
 class BaseLoanListView(LoginRequiredMixin, ListView):
     model = Loan
@@ -63,7 +68,13 @@ class LoanRequestView(BaseLoanListView):
     def get_queryset(self):
         # Filter loans based on the status and user role
         # Main code in BaseLoanListView Helper Method
-        return self.get_filtered_queryset(statuses=['Pending', 'Approved'])
+        return self.get_filtered_queryset(statuses=['Pending'])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # To separate Approved Loans from Pending Loans
+        context['approved_loans'] = self.get_filtered_queryset(statuses=['Approved'])
+        return context
         
 
 class LoanDisbursedView(BaseLoanListView):
@@ -82,14 +93,14 @@ class LoanSettledView(BaseLoanListView):
         # Filter loans based on the status
         return self.get_filtered_queryset(statuses=['Settled'])
 
-class LoanVoidedView(BaseLoanListView):
+class LoanVoidedView(StaffRequiredMixin, BaseLoanListView):
     template_name = 'loan/loan_list_voided.html'
 
     def get_queryset(self):
         # Filter loans based on the status
         return self.get_filtered_queryset(statuses=['Cancelled', 'Rejected'])
 
-class LoanWatchlistView(BaseLoanListView):
+class LoanWatchlistView(StaffRequiredMixin, BaseLoanListView):
     template_name = 'loan/loan_list_watchlist.html'
 
     def get_queryset(self):
@@ -101,7 +112,7 @@ class LoanApplyView(CreateView):
     model = Loan
     template_name = 'loan/forms/loan_apply.html'
     
-    success_url = _('loan_list')
+    success_url = _('loan_request')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -119,9 +130,14 @@ class LoanApplyView(CreateView):
         if not self.request.user.is_staff and not get_community_head(self.request.user.id):
             form.instance.member = self.request.user.member
 
+        # Limit Status to 'Pending' Only for New Loan Application
+        if form.instance.status != 'Pending':
+            messages.warning(self.request, "New Loan Application Must be in 'Pending' Status")
+            return self.form_invalid(form)
+
         return super().form_valid(form)
     
-class LoanUpdateView(UpdateView):
+class LoanUpdateView(StaffRequiredMixin, UpdateView):
     model = Loan
     template_name = 'loan/forms/loan_update.html'
     form_class = LoanApplyAdminForm
@@ -185,6 +201,15 @@ class LoanUpdateView(UpdateView):
             form.instance.end_date = form.instance.start_date + relativedelta(months=form.instance.tenure) - timedelta(days=1)  # Tenure is in months
            
             form.instance.save(update_fields=['start_date', 'end_date'])
+
+            # Auto Create Loan Account once Loan is Disbursed
+            loan_account = LoanAccount.objects.create(
+                loan=form.instance,
+            )
+            print(loan_account.loan_account_number,"create hunebitikai ko ")
+            
+            # Create Monthly Payment Scheduel of Disbursed Loan (Code in utils.py)
+            get_monthly_interest_amount(form.instance.loan_amount, form.instance.tenure, form.instance.interest_rate, loan_account.loan_account_number)
         
         elif form.instance.status == 'Disbursed' or form.instance.status == 'Watchlist' and form.instance.end_date:
             if form.instance.has_penalty == True:
@@ -194,10 +219,8 @@ class LoanUpdateView(UpdateView):
                 # Calculation of Penalty
                 if form.instance.penalty_type == 'Rate':
                     penalty_amount = form.instance.calculate_penalty(200)
-                    print(penalty_amount)
                 else:
                     penalty_amount = form.instance.penalty_value
-                    print(form.instance.penalty_type, form.instance.penalty_value)
             elif form.instance.status == 'Watchlist' and form.instance.has_penalty == False:
                 form.instance.status = 'Watchlist'
                 form.instance.save(update_fields=['status'])
@@ -234,16 +257,79 @@ class LoanUpdateView(UpdateView):
         response = super().form_invalid(form)
         return response
     
-# class LoanRepaymentView(ListView):
-#     model = Loan
-#     template_name = 'loan/loaner_list.html'
-#     context_object_name = 'loans'
+class LoanAccountCreateView(CreateView):
+    model = LoanAccount
+    template_name = 'loan/forms/loan_account_create.html'
+    form_class = LoanAccountForm
+    success_url = _('loan_list')
 
-#     def get_queryset(self):
-#         # Filter loans based on the status
-#         return Loan.objects.filter(status__in = ['Disbursed', 'Watchlist'])
+
+
+class LoanAccountListView(ListView):
+    model = LoanAccount
+    template_name = 'loan/loaner_list.html'
+    context_object_name = 'loan_accounts'
+
+    # def get_queryset(self):
+    #     # Filter loan accounts based on the user role
+    #     user = self.request.user
+    #     if user.is_staff:
+    #         return LoanAccount.objects.all()
+    #     elif get_community_head(user):
+    #         return LoanAccount.objects.filter(loan__member__community__community_head=user)
+    #     else:
+    #         return LoanAccount.objects.filter(loan__member__username=user.id)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        return context
+
+
+class LoanInterestCreateView(CreateView):
+    pass
+
+class LoanInterestListView(ListView):
+    model = LoanInterest
+    # template_name = 'loan_interest/loan_interest_list.html'
+    template_name = 'loan_interest/loan_interest_payment_sheet.html'
+
+    # Get the loan account number from clicked account from HTML and filter the data with received account number
+    def get_queryset(self):
+        loan_account_number = self.kwargs.get('pk')
+        return LoanInterest.objects.filter(loan__loan_account_number=loan_account_number)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context['loan_interest_lists'] = self.get_queryset()
+        
+        # Sum of total paid interest of respective queryset
+        total = self.get_queryset().aggregate(total=Sum('paid_amount'))['total'] or 0
+        context['loan_interest_paid'] = Decimal(total).quantize(Decimal('0.01'))
+
+        return context
+
+class LoanInterestUpdateView(UpdateView):
+    model = LoanInterest
+    template_name = 'loan_interest/forms/loan_interest_update.html'
+    form_class = LoanInterestForm
     
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['repayment_type'] = Loan.REPAYMENT_TYPE
-    #     return context
+
+    def get_success_url(self):
+        return _('loan_interest_list', kwargs={'pk': self.object.loan.loan_account_number})
+
+    # def form_valid(self, form):
+    #     # Ensure that paid_amount does not exceed interest_amount
+    #     if form.instance.paid_amount > form.instance.interest_amount:
+    #         form.add_error('paid_amount', 'Paid amount cannot exceed the interest amount.')
+    #         return self.form_invalid(form)
+        
+    #     # If the paid amount equals the interest amount, mark the installment as paid
+    #     if form.instance.paid_amount == form.instance.interest_amount:
+    #         form.instance.is_paid = True
+    #         form.instance.paid_date = timezone.now().date()
+    #         form.instance.save(update_fields=['is_paid', 'paid_date'])
+    #     else:
+    #         form.instance.is_paid = False
+    #         form.instance.paid_date = None
+    #         form.instance.save(update_fields=['is_paid', 'paid_date'])

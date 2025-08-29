@@ -77,7 +77,7 @@
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
                 <p class="card-category">Total Loan</p>
-                <h4 class="card-title">57685</h4>
+                <h4 class="card-title">{{ total_loans }}</h4>
               </div>
             </div>
           </div>
@@ -103,13 +103,13 @@
                 </tr>
               </thead>
               <tbody>
-                {% for community_total in community_total_deposit %}
+                {% for community_total in community_stats %}
                                 
                 <tr>
                   <th scope="row">{{forloop.counter}}</th>
                   <td>{{community_total.community_name}}</td>
                   <td>Rs. {{community_total.total_deposit}}</td>
-                  <td>Rs. 15,315.76</td>
+                  <td>Rs. {{community_total.total_loan}}</td>
                   <td>Rs. 20,000</td>
                 </tr>
                 {% endfor %}
@@ -143,9 +143,19 @@
             <div class="card-list py-4">
               {% for individual_total in individual_total_deposit %}
               <div class="item-list">
+                {% if individual_total.profile_picture %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="/media/{{ individual_total.profile_picture }}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
+                {% elif individual_total.gender == "Male" %}
+                <div class="avatar">
+                  <img src="{% static 'assets/image/profile_male.jpg' %}" alt="profile-pic" class="avatar-img rounded-circle" />
+                </div>
+                {% else %}
+                <div class="avatar">
+                  <img src="{% static 'assets/image/profile_female.png' %}" alt="profile-pic" class="avatar-img rounded-circle" />
+                </div>
+                {% endif %}
                 <div class="info-user ms-3">
                   <div class="username">{{ individual_total.username__first_name|title }} {{individual_total.username__last_name|title}} </div>
                   <div class="status">{{ individual_total.community__community_name }}</div>
@@ -171,36 +181,28 @@
         <div class="card-body pb-0">
           <div class="mb-4 mt-2">
             <div class="card-list py-4">
+              {% for individual_total in individual_total_loan %}
               <div class="item-list">
+                {% if individual_total.profile_picture %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="/media/{{ individual_total.profile_picture }}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
-                <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
-                </div>
-                <h5>Rs. 45000/-</h5>
-              </div>
-              <div class="item-list">
+                {% elif individual_total.gender == "Male" %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="{% static 'assets/image/profile_male.jpg' %}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
-                <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
-                </div>
-                <h5>Rs. 45000/-</h5>
-              </div>
-              <div class="item-list">
+                {% else %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="{% static 'assets/image/profile_female.png' %}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
+                {% endif %}
                 <div class="info-user ms-3">
-                  <div class="username">Jimmy Denis</div>
-                  <div class="status">Graphic Designer</div>
+                  <div class="username">{{ individual_total.username__first_name|title }} {{individual_total.username__last_name|title}} </div>
+                  <div class="status">{{ individual_total.community__community_name }}</div>
                 </div>
-                <h5>Rs. 45000/-</h5>
+                <h5>Rs. {{ individual_total.total_loan }}/-</h5>
               </div>
+              {% endfor %}
             </div>
           </div>
         </div>
@@ -229,16 +231,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {% for tx in recent_transactions %}
+              <tr> 
                 <th scope="row">
                   <button class="btn btn-icon btn-round btn-success btn-sm me-2"><i class="fa fa-check"></i></button>
-                  Deposit on Mahesh Dangol's Account
+                  {{tx.description}}
                 </th>
-                <td class="text-start">Farsidol Community Saving</td>
-                <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                <td class="text-end">Rs. 5000/-</td>
-                <td class="text-end">Saving of May</td>
+                <td class="text-start">{{ tx.community }}</td>
+                <td class="text-end">{{tx.date}}, {{tx.time}}</td>
+                <td class="text-end">Rs. {{tx.amount}}/-</td>
+                <td class="text-end">{{tx.remarks|title}}</td>
               </tr>
+              {% endfor %}
               <tr>
                 <th scope="row">
                   <button class="btn btn-icon btn-round btn-danger btn-sm me-2"><i class="fa fa-check"></i></button>

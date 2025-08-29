@@ -38,9 +38,13 @@ $("#multi-filter-select").DataTable({
 $("#multi-filter-select-individual-deposit").DataTable({
     pageLength: 15
 });
+$("#multi-filter-select-loan-approved").DataTable({
+    pageLength: 15
+});
+
 // Add Row
 // $("#add-row").DataTable({
-//     pageLength: 5,
+//     pageLength: 5, multi-filter-select-loan-approved
 // });
 
 var action =

@@ -19,13 +19,15 @@
                   <table id="multi-filter-select" class="display table table-hover">
                     <thead>
                       <tr>
-                        <th>Member ID</th>
+                        <th>Loan Account ID</th>
                         <th>Member Name</th>
                         <th>Loan Amount</th>
+                        <th>Interest Per Day</th>
+                        <th>Accrued Interest</th>
+                        <th>Monthly Interest</th>
                         <th>Loan Tenure</th>
                         <th>Interest Rate</th>
                         
-                        <th>Status</th>
                         <th>Days To Expiry</th>
                         
                         <th>Start Date</th>
@@ -40,33 +42,42 @@
                         <th class="text-center">Action</th>
                         {% endif %}
                       </tr>
+                      
                     </thead>
 
                     <tbody>
                      
-                      {% for loan in loans %}
+                      {% for loan in loan_accounts %}
+                        
+                      
                         <tr>
-                          <td class="text-left">{{ loan.member_id }}</td>
-                          <td class="text-left">{{ loan.member }}</td>
-                          <td class="text-left">{{ loan.amount }}</td>
+                          <td class="text-left">
+                            <a href="{% url 'loan_interest_list' loan.loan_account_number %}">
+                              {{ loan.loan_account_number }}
+                            </a>
+                          </td>
+                          <td class="text-left">{{ loan.loan.member }}</td>
+                          <td class="text-left">{{ loan.loan.loan_amount }}</td>
+                          <td class="text-left">{{ loan.interest_per_day }}</td>
+                          <td class="text-left">{{ loan.accrued_interest }}</td>
+                          <td class="text-left">{{ loan.monthly_interest }}</td>
                           {% if loan.tenure == 1 %}
-                          <td class="text-left">{{ loan.tenure }} month</td>
+                          <td class="text-left">{{ loan.loan.tenure }} month</td>
                           {% else %}
-                          <td class="text-left">{{ loan.tenure }} months</td>
+                          <td class="text-left">{{ loan.loan.tenure }} months</td>
                           {% endif %}
-                          <td class="text-left">{{ loan.interest_rate }} %</td>
-                          <td class="text-left">{{ loan.status }}</td>
-                          <td class="text-left">{{ loan.days_to_expiryProperty }}</td>
-                          <td class="text-left">{{ loan.start_date }}</td>
-                          <td class="text-left">{{ loan.end_date }}</td>
-                          <td class="text-left">{{ loan.guarantor }}</td>
-                          <td class="text-left">{{ loan.penalty_type }}</td>
-                          {% if loan.penalty_type == "Rate" %}
-                          <td class="text-left">{{ loan.penalty_value }} %</td>
+                          <td class="text-left">{{ loan.loan.interest_rate }} %</td>
+                          <td class="text-left">{{ loan.loan.days_to_expiryProperty }}</td>
+                          <td class="text-left">{{ loan.loan.start_date }}</td>
+                          <td class="text-left">{{ loan.loan.end_date }}</td>
+                          <td class="text-left">{{ loan.loan.guarantor }}</td>
+                          <td class="text-left">{{ loan.loan.repayment_type }}</td>
+                          <td class="text-left">{{ loan.loan.penalty_type }}</td>
+                          {% if loan.loan.penalty_type == "Rate" %}
+                          <td class="text-left">{{ loan.loan.penalty_value }} %</td>
                           {% else %}
-                          <td class="text-left">Rs. {{ loan.penalty_value }}</td>
+                          <td class="text-left">Rs. {{ loan.loan.penalty_value }}</td>
                           {% endif %}
-                          <td class="text-left">{{ loan.rejected_reason }}</td>
                           
                           
                           {% if user.is_staff %}

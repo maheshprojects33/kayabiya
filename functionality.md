@@ -39,3 +39,18 @@
 
 # Member Detail Fields
 - need to add occupation
+
+
+## New SideBar Menu
+# Loan Statement
+    - Loaner # Display Name of Member whos loan is disbursed (list)
+    - Interest # 
+    - Fine # 
+Display Name of Member whos loan is disbursed
+When click on name all the details will be displayed
+- details to display
+    - Interest need to pay
+    - Intereset paid
+    - Fine paid
+- Accured Interest Daily
+- Loan ID to be Generated when loan is disbursed

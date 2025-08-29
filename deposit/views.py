@@ -17,7 +17,7 @@ from member.models import Community
 from account.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from member.utils import get_individual_deposits
+from member.utils import get_individual_deposits, record_transaction
 
 # Create your views here.
 class DepositView(LoginRequiredMixin, ListView):
@@ -73,6 +73,17 @@ class SingleDepositCreateView(StaffRequiredMixin, CreateView):
         if form.cleaned_data["date"] > current_date:
             messages.warning(self.request, "Future Date Is Not Acceptable")
             return self.form_invalid(form)
+        
+        # Send transaction to the record_transaction function at member/utils.py
+        record_transaction(
+            description=f"Deposit on {form.cleaned_data['account']}'s Account",
+            community=form.cleaned_data["account"].community,
+            date=form.cleaned_data["date"],
+            time=datetime.now().time(),
+            amount=form.cleaned_data["deposit_amount"],
+            remarks=form.cleaned_data.get("remarks")
+        )
+
         messages.success(self.request, "New Deposit Has Been Added Successfully")
         return super().form_valid(form)
 

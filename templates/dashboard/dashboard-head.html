@@ -80,7 +80,7 @@
             <div class="col col-stats ms-3 ms-sm-0">
               <div class="numbers">
                 <p class="card-category">Total Loan</p>
-                <h4 class="card-title">57685</h4>
+                <h4 class="card-title">{{ communityHead_total_loan }}</h4>
               </div>
             </div>
           </div>
@@ -153,15 +153,25 @@
         </div>
         <div class="card-body pb-0">
           <div class="card-list py-0">
-            {% for individual_total in individual_total_deposit %}
+            {% for individual_total in community_highest_borrower %}
               <div class="item-list">
+                {% if individual_total.profile_picture %}
                 <div class="avatar">
-                  <img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+                  <img src="/media/{{ individual_total.profile_picture }}" alt="profile-pic" class="avatar-img rounded-circle" />
                 </div>
+                {% elif individual_total.gender == "Male" %}
+                <div class="avatar">
+                  <img src="{% static 'assets/image/profile_male.jpg' %}" alt="profile-pic" class="avatar-img rounded-circle" />
+                </div>
+                {% else %}
+                <div class="avatar">
+                  <img src="{% static 'assets/image/profile_female.png' %}" alt="profile-pic" class="avatar-img rounded-circle" />
+                </div>
+                {% endif %}
                 <div class="info-user ms-3">
                   <div class="username">{{ individual_total.username__first_name|title }} {{ individual_total.username__last_name|title }}</div>
                 </div>
-                <h5>Rs. {{ individual_total.total_deposit }}/-</h5>
+                <h5>Rs. {{ individual_total.total_loan }}/-</h5>
               </div>
             {% endfor %}
           </div>

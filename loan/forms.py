@@ -1,5 +1,5 @@
 from django import forms
-from .models import Loan
+from .models import *
 from member.models import Member
 
 
@@ -9,7 +9,7 @@ class LoanApplyUserForm(forms.ModelForm):
         
         fields = [
             
-            "amount",
+            "loan_amount",
             "purpose",
             "tenure",
             "repayment_type",
@@ -69,7 +69,7 @@ class LoanApplyAdminForm(forms.ModelForm):
             self.fields['status'].choices = [
                 ('Rejected', 'Rejected'),
                 ('Cancelled', 'Cancelled'),
-                ('Approved', 'Approved'),
+                ('Pending', 'Pending'),
             ]
             # Disable all fields except 'status' and 'rejected_reason'
             for name, field in self.fields.items():
@@ -111,3 +111,30 @@ class LoanApplyAdminForm(forms.ModelForm):
                 self.fields['member'].queryset = Member.objects.none()
 
         
+class LoanAccountForm(forms.ModelForm):
+    class Meta:
+        model = LoanAccount
+        fields = "__all__"
+        exclude = ["loan_account_number"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "form-control"})
+
+class LoanInterestForm(forms.ModelForm):
+    class Meta:
+        model = LoanInterest
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "form-control"})
+
+        # Disable all fields except 'Paid Amount'
+        for name, field in self.fields.items():
+            if name not in ['paid_amount']:
+                field.disabled = True

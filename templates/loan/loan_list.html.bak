@@ -102,7 +102,7 @@
    
     <!-- Floating Button -->
     <div class="fixed-action-btn btn-outline-link">
-      <a href="{% url 'loan_apply' %}" class="btn-floating btn-icon-prepend" title="Apply For New Loan"><i class="fas fa-plus-circle"></i></a>
+      <a href="{% url 'loan_account_create' %}" class="btn-floating btn-icon-prepend" title="Apply For New Loan Account"><i class="fas fa-plus-circle"></i></a>
     </div>
 
   

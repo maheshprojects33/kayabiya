@@ -25,9 +25,8 @@
                         <th>Loan Tenure</th>
                         <th>Interest Rate</th>
                         <th>Purpose</th>
-                        <th>Status</th>
                        
-                        <th>Application Date</th>
+                        <th>Days To Expiry</th>
                        
                         <th>Collateral</th>
                         <th>Collateral Proof</th>
@@ -55,9 +54,8 @@
                           {% endif %}
                           <td class="text-left">{{ loan.interest_rate }} %</td>
                           <td class="text-left">{{ loan.purpose }}</td>
-                          <td class="text-left">{{ loan.status }}</td>
                           
-                          <td class="text-left">{{ loan.application_date }}</td>
+                          <td class="text-left">{{ loan.days_to_expiryProperty }}</td>
                           
                           <td class="text-left">{{ loan.collateral }}</td>
                           <td class="text-left">{{ loan.collateral_proof }}</td>

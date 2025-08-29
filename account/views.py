@@ -34,7 +34,7 @@ class AccountView(StaffRequiredMixin, ListView):
             managed_communities = Community.objects.filter(community_head=user)
 
             # Return all members in those communities
-            member_users = Member.objects.filter(community__in=managed_communities).values_list('username', flat=True)
+            member_users = Member.objects.filter(community__in=managed_communities).values_list('username', flat=True).exclude(role='Community-Head')
             
 
         return User.objects.filter(id__in=member_users)

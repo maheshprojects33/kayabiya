@@ -25,7 +25,6 @@
                         <th>Loan Tenure</th>
                         <th>Interest Rate</th>
                         <th>Purpose</th>
-                        <th>Status</th>
                         <th>Application Date</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -47,7 +46,7 @@
                         <tr>
                           <td class="text-left">{{ loan.member_id }}</td>
                           <td class="text-left">{{ loan.member }}</td>
-                          <td class="text-left">{{ loan.amount }}</td>
+                          <td class="text-left">{{ loan.loan_amount }}</td>
                           {% if loan.tenure == 1 %}
                           <td class="text-left">{{ loan.tenure }} month</td>
                           {% else %}
@@ -55,7 +54,6 @@
                           {% endif %}
                           <td class="text-left">{{ loan.interest_rate }} %</td>
                           <td class="text-left">{{ loan.purpose }}</td>
-                          <td class="text-left">{{ loan.status }}</td>
                           <td class="text-left">{{ loan.application_date }}</td>
                           <td class="text-left">{{ loan.start_date }}</td>
                           <td class="text-left">{{ loan.end_date }}</td>
